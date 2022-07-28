@@ -1,7 +1,9 @@
 package com.bersoft.bershopping.services;
 
-import com.bersoft.bershopping.persistence.entities.OrderItem;
-import com.bersoft.bershopping.persistence.entities.Product;
+
+
+import com.bersoft.bershopping.persistence.entities.checkout.OrderItem;
+import com.bersoft.bershopping.persistence.entities.product.Product;
 
 import java.util.List;
 

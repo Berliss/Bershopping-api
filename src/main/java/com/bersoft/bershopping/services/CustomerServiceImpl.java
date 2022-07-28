@@ -21,10 +21,9 @@ import java.util.Optional;
 @Service
 public class CustomerServiceImpl implements ICustomerService {
 
-    private final ICustomerRepository customerRepository;
-    private final IBasketRepository basketRepository;
-    private final IOrderRepository orderRepository;
-
+    private ICustomerRepository customerRepository;
+    private IBasketRepository basketRepository;
+    private IOrderRepository orderRepository;
 
     public CustomerServiceImpl(ICustomerRepository customerRepository, IBasketRepository basketRepository, IOrderRepository orderRepository) {
         this.customerRepository = customerRepository;
@@ -126,14 +125,18 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     @Override
+    @Transactional
     public Order createOrder(Order order) {
-        return orderRepository.save(order);
+        if (order != null && order.getId() == null) {
+            return orderRepository.save(order);
+        } else {
+            throw new IllegalArgumentException("order & order id can not be null");
+        }
     }
-
 
     //private methods for internal use.
     private Basket updateProductQuantity(Basket basket, Product product, Double quantity, BasketItem item) {
-        if (quantity <= item.getProduct().getStock() && product.getStock() > 0) {
+        if (quantity <= item.getProduct().getStock() && quantity > 0 && product.getStock() > 0) {
             item.setQuantity(quantity);
             return basket;
         } else {
@@ -142,7 +145,7 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     private Basket addNewProductToBasket(Basket basket, Product product, Double quantity) {
-        if (quantity <= product.getStock() && product.getStock() > 0) {
+        if (quantity <= product.getStock() && quantity > 0 && product.getStock() > 0) {
             basket.addItem(new BasketItem(quantity, product.getPrice(), product));
             return basket;
         } else {
