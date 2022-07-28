@@ -1,8 +1,8 @@
 package com.bersoft.bershopping.services;
 
 import com.bersoft.bershopping.customexceptions.MyResourceNotFoundException;
-import com.bersoft.bershopping.persistence.entities.OrderItem;
-import com.bersoft.bershopping.persistence.entities.Product;
+import com.bersoft.bershopping.persistence.entities.checkout.OrderItem;
+import com.bersoft.bershopping.persistence.entities.product.Product;
 import com.bersoft.bershopping.persistence.repositories.IProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
