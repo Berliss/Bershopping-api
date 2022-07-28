@@ -1,10 +1,9 @@
 package com.bersoft.bershopping.services;
 
-import com.bersoft.bershopping.persistence.entities.Basket;
-import com.bersoft.bershopping.persistence.entities.Customer;
-import com.bersoft.bershopping.persistence.entities.Product;
-
-import java.util.Optional;
+import com.bersoft.bershopping.persistence.entities.checkout.Basket;
+import com.bersoft.bershopping.persistence.entities.customer.Customer;
+import com.bersoft.bershopping.persistence.entities.checkout.Order;
+import com.bersoft.bershopping.persistence.entities.product.Product;
 
 public interface ICustomerService {
 
@@ -20,9 +19,11 @@ public interface ICustomerService {
 
     Basket addProductToBasket(Basket basket, Product product, Double quantity);
 
-    Basket setAddressToBasket(Basket basket, Customer customer, Long addressId);
+    Basket setAddressToBasket(Basket basket, Long addressId);
 
-    Basket setPaymentMethodToBasket(Basket basket, Customer customer, Long paymentMethodId);
+    Basket setPaymentMethodToBasket(Basket basket, Long paymentMethodId);
+
+    Order createOrder(Order order);
 
     void deleteBasket(Basket basket);
 }
