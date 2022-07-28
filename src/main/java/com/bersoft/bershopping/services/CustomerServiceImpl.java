@@ -52,11 +52,11 @@ public class CustomerServiceImpl implements ICustomerService {
     @Override
     @Transactional
     public Basket createBasket(Basket basket, Customer customer) {
-        if (basket != null && customer != null && customer.getId() != null) {
+        if (basket != null && customer != null && customer.getId() != null && basket.getId() == null) {
             basket.setCustomer(customer);
             return basketRepository.save(basket);
         } else {
-            throw new NullPointerException("basket, customer & customer id can not be null");
+            throw new IllegalArgumentException("basket, customer, customer id & basket id can not be null");
         }
     }
 
