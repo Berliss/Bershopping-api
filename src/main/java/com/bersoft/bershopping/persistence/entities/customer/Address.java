@@ -1,4 +1,4 @@
-package com.bersoft.bershopping.persistence.entities;
+package com.bersoft.bershopping.persistence.entities.customer;
 
 import javax.persistence.*;
 
@@ -14,18 +14,7 @@ public class Address {
     @Column(nullable = false)
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
-
-    public Customer getUser() {
-        return customer;
-    }
-
-    public void setUser(Customer customer) {
-        this.customer = customer;
-    }
-
+    //getters & setters
     public Long getId() {
         return id;
     }

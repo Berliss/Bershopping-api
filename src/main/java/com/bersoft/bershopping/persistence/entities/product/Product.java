@@ -1,4 +1,4 @@
-package com.bersoft.bershopping.persistence.entities;
+package com.bersoft.bershopping.persistence.entities.product;
 
 import javax.persistence.*;
 import java.util.Objects;

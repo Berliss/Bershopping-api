@@ -1,36 +1,37 @@
-package com.bersoft.bershopping.persistence.entities;
+package com.bersoft.bershopping.persistence.entities.customer;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "payment_methods")
-public class PaymentMethod {
+public class PaymentMethod implements IPaymentMethod {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "payment_type",updatable = false,nullable = false)
+    @Column(name = "payment_type", nullable = false)
     private String paymentType;
 
-    @Column(name = "number_reference",updatable = false, nullable = false)
+    @Column(name = "number_reference", nullable = false)
     private String numberReference;
 
     @Column(nullable = false)
     private Double balance;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
-
-    public Customer getUser() {
-        return customer;
+    @Override
+    public Double debit(double amount){
+        this.balance -= amount;
+        return this.balance;
     }
 
-    public void setUser(Customer customer) {
-        this.customer = customer;
+    @Override
+    public Double getBalance(){
+        return balance;
     }
 
+    //getters & setters
     public Long getId() {
         return id;
     }
@@ -53,10 +54,6 @@ public class PaymentMethod {
 
     public void setNumberReference(String numberReference) {
         this.numberReference = numberReference;
-    }
-
-    public Double getBalance() {
-        return balance;
     }
 
     public void setBalance(Double balance) {
