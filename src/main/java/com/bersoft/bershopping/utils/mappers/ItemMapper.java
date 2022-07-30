@@ -14,9 +14,10 @@ public class ItemMapper {
                 itemDtoList.add(new ItemDto(
                         item.getProduct().getId(),
                         item.getProduct().getDescription(),
+                        item.getProduct().getStock(),
                         item.getPrice(),
                         item.getQuantity(),
-                        item.getProduct().getStock()
+                        item.calcImport()
                 ))
         );
         return itemDtoList;

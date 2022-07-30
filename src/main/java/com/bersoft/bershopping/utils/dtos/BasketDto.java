@@ -9,7 +9,7 @@ import java.util.Map;
 public record BasketDto(long checkoutId,
                         String createAt,
                         int itemsCount,
-                        double total,
+                        double totalAmount,
                         PaymentMethod paymentMethod,
                         Address address,
                         Map<String, Object> customer,
