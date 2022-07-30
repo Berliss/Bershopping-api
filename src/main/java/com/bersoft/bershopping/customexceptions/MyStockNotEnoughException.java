@@ -8,7 +8,7 @@ public class MyStockNotEnoughException extends RuntimeException {
         super(message);
     }
 
-    public MyStockNotEnoughException(Product p, Double qtyToSell) {
-        super("stock:" + p.getStock() + " trying to sell " + qtyToSell);
+    public MyStockNotEnoughException(Product p, Double qtyToAdd) {
+        super("stock: " + p.getStock() + " trying to add " + qtyToAdd);
     }
 }
