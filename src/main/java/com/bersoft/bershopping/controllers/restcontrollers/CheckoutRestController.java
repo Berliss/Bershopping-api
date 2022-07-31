@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/bershopping/checkout")
@@ -38,31 +37,8 @@ public class CheckoutRestController {
         this.customerService = customerService;
     }
 
-    @PostMapping()
-    public ResponseEntity<?> createBasket(@RequestBody @Valid ProductToAddDto productToAdd, JwtAuthenticationToken principal) {
-
-        String email = ClaimsDecoder.getEmailFromClaims(principal);
-
-        //find the  customer mapped to this user
-        Customer customer = customerService.findCustomerByEmail(email);
-
-        //return a basket with a different status code, for the given case.
-        return Optional.ofNullable(customer.getBasket())
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> {
-
-                    Product product = productService.findById(productToAdd.id());
-                    Basket basket = checkoutService.addProductToBasket(new Basket(), product, productToAdd.quantity());
-
-                    basket.setCustomer(customer);
-                    basket = checkoutService.createBasket(basket, customer);
-                    return new ResponseEntity(new BasketMapper().mapBasketToBasketDto(basket), HttpStatus.CREATED);
-
-                });
-    }
-
     @GetMapping()
-    public ResponseEntity<BasketDto> getBasket(JwtAuthenticationToken principal) {
+    public ResponseEntity<BasketDto> getCheckout(JwtAuthenticationToken principal) {
         String email = ClaimsDecoder.getEmailFromClaims(principal);
         Basket basket = checkoutService.findCustomerBasket(email);
         return ResponseEntity.ok(new BasketMapper().mapBasketToBasketDto(basket));
@@ -79,18 +55,32 @@ public class CheckoutRestController {
         }
 
         Product product = productService.findById(id);
-        Basket basket = checkoutService.findCustomerBasket(email);
-        int basketItemsSize = basket.getBasketItems().size();
+        Customer customer = customerService.findCustomerByEmail(email);
+        Basket basket = customer.getBasket();
         ItemMapper mapper = new ItemMapper();
 
+        //if the basket does not exist, create one & add the product then return the basket items
+        if (basket == null) {
+            basket = checkoutService.addProductToBasket(new Basket(), product, productToAdd.quantity());
+            basket = checkoutService.createBasket(basket, customer);
+            return new ResponseEntity<>(mapper.mapItemsToItemsDto(basket.getBasketItems()), HttpStatus.CREATED);
+        }
+
+        //if we get here then a basket already exist
+        //get the current size of items inside the basket
+        int basketItemsSize = basket.getBasketItems().size();
+
+        //add or modify the item & then update de basket
         checkoutService.addProductToBasket(basket, product, productToAdd.quantity());
         checkoutService.updateBasket(basket);
+        List<ItemDto> basketItems = mapper.mapItemsToItemsDto(basket.getBasketItems());
+
 
         //if same size then an item was updated else was created
         if (basketItemsSize == basket.getBasketItems().size()) {
-            return ResponseEntity.ok(mapper.mapItemsToItemsDto(basket.getBasketItems()));
+            return ResponseEntity.ok(basketItems);
         } else {
-            return new ResponseEntity<>(mapper.mapItemsToItemsDto(basket.getBasketItems()), HttpStatus.CREATED);
+            return new ResponseEntity<>(basketItems, HttpStatus.CREATED);
         }
 
     }
@@ -110,7 +100,7 @@ public class CheckoutRestController {
             return ResponseEntity.ok(new ItemMapper().mapItemsToItemsDto(basket.getBasketItems()));
         } else {
             checkoutService.deleteBasket(basket);
-            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            return  new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
         }
     }
 
