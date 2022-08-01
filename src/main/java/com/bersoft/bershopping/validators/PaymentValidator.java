@@ -22,7 +22,7 @@ public class PaymentValidator extends AbstractValidator {
     }
 
     private boolean validateBalanceGreaterThanAmount() {
-        if (payMethod.getBalance() >= amountToCharge) {
+        if (payMethod.getBalance() >= amountToCharge && payMethod.getBalance() >= 0 && amountToCharge >= 0) {
             return true;
         } else {
             this.errorMessage = "payment method balance: " + payMethod.getBalance() + " not enough ";
