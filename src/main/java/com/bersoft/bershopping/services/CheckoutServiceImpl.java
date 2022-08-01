@@ -53,10 +53,10 @@ public class CheckoutServiceImpl implements ICheckoutService {
     @Override
     @Transactional
     public Basket updateBasket(Basket basket) {
-        if (basket.getId() != null) {
+        if (basket != null && basket.getId() != null && basketRepository.existsById(basket.getId())) {
             return basketRepository.save(basket);
         } else {
-            throw new IllegalArgumentException("basket id can not be null");
+            throw new MyResourceNotFoundException("basket not found, can not execute update");
         }
     }
 
