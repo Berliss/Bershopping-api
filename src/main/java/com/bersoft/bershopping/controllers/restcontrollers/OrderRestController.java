@@ -65,12 +65,11 @@ public class OrderRestController {
             basket.getPaymentMethod().debit(basket.getTotal());
 
             Order order = new Order();
-            order.setCustomer(customer);
             order.setDelivery(basket.getDelivery());
             order.setPaymentMethod(basket.getPaymentMethod());
             order.setOrderItemList(orderItemList);
 
-            Order createdOrder = orderService.createOrder(order);
+            Order createdOrder = orderService.createOrder(order,customer);
             checkoutService.deleteBasket(basket);
 
             return new ResponseEntity<>(new OrderMapper().mapOrderToOrderDto(createdOrder), HttpStatus.CREATED);

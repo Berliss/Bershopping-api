@@ -1,6 +1,7 @@
 package com.bersoft.bershopping.services;
 
 import com.bersoft.bershopping.persistence.entities.checkout.Order;
+import com.bersoft.bershopping.persistence.entities.customer.Customer;
 import com.bersoft.bershopping.persistence.repositories.IOrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,11 +18,12 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     @Transactional
-    public Order createOrder(Order order) {
-        if (order != null && order.getId() == null) {
+    public Order createOrder(Order order, Customer customer) {
+        if (order != null && order.getId() == null && customer!=null && customer.getId() != null) {
+            order.setCustomer(customer);
             return orderRepository.save(order);
         } else {
-            throw new IllegalArgumentException("order & order id can not be null");
+            throw new IllegalArgumentException("order, customer, customer id & order id can not be null");
         }
     }
 
