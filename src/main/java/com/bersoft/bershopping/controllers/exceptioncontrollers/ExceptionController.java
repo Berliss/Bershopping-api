@@ -36,7 +36,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({MyStockNotEnoughException.class, MyIdAndRequestBodyIdNotMatchException.class, MyBadOrderException.class})
-    public final ResponseEntity<Object> hanldleBadRequestExceptions(Exception ex, WebRequest request) {
+    public final ResponseEntity<Object> handledBadRequestExceptions(Exception ex, WebRequest request) {
         return createErrorResponse("Bad request", ex, HttpStatus.BAD_REQUEST, false);
     }
 
@@ -63,11 +63,5 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         ApiErrorResponse error = new ApiErrorResponse(customMessage, Arrays.asList(details), httpStatus.value());
         return new ResponseEntity<>(error, httpStatus);
     }
-
-    //not needed anymore but keep just in case.
-/*    private ResponseEntity<Object> createErrorResponse(String customMessage, List<String> list, HttpStatus httpStatus) {
-        ApiErrorResponse error = new ApiErrorResponse(customMessage, list, httpStatus.value());
-        return new ResponseEntity<>(error, httpStatus);
-    }*/
 
 }
